@@ -9,4 +9,5 @@ public interface Constants {
     String[] JobGroups = {"A", "B"};
     Double RateA = 20.0;
     Double RateB = 30.0;
+    String SuccessMessage = "The new records were added to payroll";
 }

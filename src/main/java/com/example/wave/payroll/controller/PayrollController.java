@@ -1,18 +1,17 @@
 package com.example.wave.payroll.controller;
 
 import com.example.wave.payroll.service.PayrollService;
+import com.example.wave.payroll.util.Constants;
 import com.example.wave.payroll.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -24,26 +23,37 @@ public class PayrollController {
     PayrollService payrollService;
 
     @GetMapping("/payroll")
-    public String hello(Model model) {
+    public String hello() {
         log.info("Get Payroll");
         return "payroll";
     }
 
     @PostMapping("/upload")
-    public String singleFileUpload(@RequestParam("file") MultipartFile multipartFile, Model model) {
+    public String singleFileUpload(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
         log.info("Uploading file: " + multipartFile.getOriginalFilename());
+
+        if (!multipartFile.getContentType().equalsIgnoreCase("text/csv")) {
+            redirectAttributes.addFlashAttribute("msg", ErrorMessage.InvalidFileType);
+            return "redirect:/payroll";
+        }
+
         String result = "";
         try {
             result = payrollService.uploadAndSaveRecord(multipartFile);
         } catch (Exception e) {
             e.printStackTrace();
             log.info(ErrorMessage.CSVError + "Exception Message: " + e.getMessage());
-            model.addAttribute("msg", ErrorMessage.CSVError);
-            model.addAttribute("exception", e.getMessage());
+            redirectAttributes.addFlashAttribute("msg", ErrorMessage.CSVError);
+            redirectAttributes.addFlashAttribute("exception", e.getMessage());
             return "redirect:/payroll";
         }
 
-        model.addAttribute("msg", ErrorMessage.CSVError);
-        return "redirect:/payroll";
+        if(Constants.Success.equalsIgnoreCase(result)) {
+            redirectAttributes.addFlashAttribute("msg", Constants.SuccessMessage);
+            return "redirect:/payroll";
+        } else {
+            redirectAttributes.addFlashAttribute("msg", ErrorMessage.Error + ": " + result);
+            return "redirect:/payroll";
+        }
     }
 }

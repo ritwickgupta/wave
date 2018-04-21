@@ -4,8 +4,8 @@ import com.example.wave.payroll.persistence.PayrollReport;
 import com.example.wave.payroll.persistence.Record;
 import com.example.wave.payroll.persistence.ReportNumber;
 import com.example.wave.payroll.repository.PayrollReportRepository;
-import com.example.wave.payroll.repository.ReportNumberRepository;
 import com.example.wave.payroll.repository.RecordRepository;
+import com.example.wave.payroll.repository.ReportNumberRepository;
 import com.example.wave.payroll.util.Constants;
 import com.example.wave.payroll.util.ErrorMessage;
 import com.opencsv.CSVReader;
@@ -15,13 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -58,6 +60,11 @@ public class PayrollService {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
             String[] line;
             while ((line = reader.readNext()) != null) {
+
+                if(line.length != 4) {
+                    return ErrorMessage.CSVError;
+                }
+
                 if(Constants.Date.equalsIgnoreCase(line[0])) {
                     continue;
                 } else if (Constants.ReportId.equalsIgnoreCase(line[0])) {
