@@ -1,7 +1,7 @@
 drop table if exists record;
 
 create table record (
-  id integer not null,
+  id integer not null auto_increment,
   jobdate date not null,
   hoursworked decimal not null,
   employeeid integer not null,
@@ -11,7 +11,7 @@ create table record (
 drop table if exists payroll_report;
 
 create table payroll_report (
-  id integer not null,
+  id integer not null auto_increment,
   employeeid integer not null,
   startdate date not null,
   enddate date not null,
@@ -22,6 +22,6 @@ create table payroll_report (
 drop table if exists report_number;
 
 create table report_number (
-  id integer not null,
+  id integer not null auto_increment,
   reportNumber integer not null
 );

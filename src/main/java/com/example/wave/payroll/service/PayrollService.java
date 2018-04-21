@@ -5,6 +5,7 @@ import com.example.wave.payroll.persistence.ReportNumber;
 import com.example.wave.payroll.repository.PayrollReportRepository;
 import com.example.wave.payroll.repository.ReportNumberRepository;
 import com.example.wave.payroll.repository.RecordRepository;
+import com.example.wave.payroll.util.Constants;
 import com.example.wave.payroll.util.ErrorMessage;
 import com.opencsv.CSVReader;
 import org.slf4j.Logger;
@@ -52,9 +53,9 @@ public class PayrollService {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
             String[] line;
             while ((line = reader.readNext()) != null) {
-                if("date".equalsIgnoreCase(line[0])) {
+                if(Constants.Date.equalsIgnoreCase(line[0])) {
                     continue;
-                } else if ("report id".equalsIgnoreCase(line[0])) {
+                } else if (Constants.ReportId.equalsIgnoreCase(line[0])) {
                     if(reportNumberRepository.findByRecordNumber(Integer.parseInt(line[1])) != null) {
                         log.info(ErrorMessage.ReportUploaded);
                         return ErrorMessage.ReportUploaded;
@@ -62,7 +63,7 @@ public class PayrollService {
                         reportNumber.setReportNumber(Integer.parseInt(line[1]));
                     }
                 } else {
-                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    DateFormat dateFormat = new SimpleDateFormat(Constants.DateFormat);
                     Record record = new Record(dateFormat.parse(line[0]), Double.parseDouble(line[1]), Integer.parseInt(line[2]), line[3]);
                     log.info(record.toString());
                     records.add(record);
