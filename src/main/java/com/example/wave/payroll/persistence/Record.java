@@ -12,7 +12,7 @@ public class Record {
     @GeneratedValue
     private Integer id;
     private Date jobDate;
-    private Integer hoursWorked;
+    private Double hoursWorked;
     private Integer employeeId;
     private String jobGroup;
 
@@ -32,11 +32,11 @@ public class Record {
         this.jobDate = jobDate;
     }
 
-    public Integer getHoursWorked() {
+    public Double getHoursWorked() {
         return hoursWorked;
     }
 
-    public void setHoursWorked(Integer hoursWorked) {
+    public void setHoursWorked(Double hoursWorked) {
         this.hoursWorked = hoursWorked;
     }
 
@@ -56,7 +56,7 @@ public class Record {
         this.jobGroup = jobGroup;
     }
 
-    public Record(Date jobDate, Integer hoursWorked, Integer employeeId, String jobGroup) {
+    public Record(Date jobDate, Double hoursWorked, Integer employeeId, String jobGroup) {
         this.jobDate = jobDate;
         this.hoursWorked = hoursWorked;
         this.employeeId = employeeId;
@@ -64,5 +64,16 @@ public class Record {
     }
 
     public Record() {
+    }
+
+    @Override
+    public String toString() {
+        return "Record{" +
+                "id=" + id +
+                ", jobDate=" + jobDate +
+                ", hoursWorked=" + hoursWorked +
+                ", employeeId=" + employeeId +
+                ", jobGroup='" + jobGroup + '\'' +
+                '}';
     }
 }
