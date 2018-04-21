@@ -1,5 +1,6 @@
 package com.example.wave.payroll.service;
 
+import com.example.wave.payroll.persistence.PayrollReport;
 import com.example.wave.payroll.persistence.Record;
 import com.example.wave.payroll.persistence.ReportNumber;
 import com.example.wave.payroll.repository.PayrollReportRepository;
@@ -18,8 +19,12 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -81,6 +86,44 @@ public class PayrollService {
 
             recordRepository.saveAll(records);
             reportNumberRepository.save(reportNumber);
+
+            //Process Records
+
+            for(Record record : records) {
+                PayrollReport payrollReport = payrollReportRepository.getReport(record.getEmployeeId(), record.getJobDate());
+                Double amountPaid;
+                if(record.getJobGroup().equalsIgnoreCase("A")) {
+                    amountPaid = Constants.RateA * record.getHoursWorked();
+                } else {
+                    amountPaid = Constants.RateB * record.getHoursWorked();
+                }
+
+                if(payrollReport == null) {
+
+                    LocalDate localJobDate = record.getJobDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate localEndDate, localStartDate;
+                    Date startDate, endDate;
+
+                    if (localJobDate.getDayOfMonth() > 15) {
+                        localStartDate = localJobDate.withDayOfMonth(16);
+                        localEndDate = localJobDate.withDayOfMonth(localJobDate.getMonth().length(localJobDate.isLeapYear()));
+                    } else {
+                        localStartDate = localJobDate.withDayOfMonth(1);
+                        localEndDate = localJobDate.withDayOfMonth(15);
+                    }
+
+                    startDate =Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    endDate =Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+                    payrollReport = new PayrollReport(record.getEmployeeId(), startDate, endDate, amountPaid);
+                    payrollReportRepository.save(payrollReport);
+
+                } else {
+                    payrollReport.setAmountPaid(payrollReport.getAmountPaid() + amountPaid);
+                    payrollReportRepository.save(payrollReport);
+                }
+            }
+
             return Constants.Success;
         }
     }
