@@ -24,6 +24,9 @@ public class PayrollController {
     @GetMapping("/payroll")
     public String hello(Model model) {
         log.info("Get Payroll");
+
+        
+
         return "payroll";
     }
 
