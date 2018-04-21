@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -45,7 +46,6 @@ public class PayrollService {
 
     public String uploadAndSaveRecord(MultipartFile multipartFile) throws IOException, NumberFormatException, ParseException {
 
-        String result = "";
         File file = convertMultiPartToFile(multipartFile);
         List<Record> records = new ArrayList<>();
         ReportNumber reportNumber = new ReportNumber();
@@ -64,6 +64,10 @@ public class PayrollService {
                     }
                 } else {
                     DateFormat dateFormat = new SimpleDateFormat(Constants.DateFormat);
+                    if(!Arrays.asList(Constants.JobGroups).contains(line[3])) {
+                        log.info(ErrorMessage.InvalidJobGroup);
+                        return ErrorMessage.InvalidJobGroup;
+                    }
                     Record record = new Record(dateFormat.parse(line[0]), Double.parseDouble(line[1]), Integer.parseInt(line[2]), line[3]);
                     log.info(record.toString());
                     records.add(record);
@@ -77,7 +81,7 @@ public class PayrollService {
 
             recordRepository.saveAll(records);
             reportNumberRepository.save(reportNumber);
-            return result;
+            return Constants.Success;
         }
     }
 }
