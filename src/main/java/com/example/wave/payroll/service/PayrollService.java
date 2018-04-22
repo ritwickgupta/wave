@@ -134,4 +134,9 @@ public class PayrollService {
             return Constants.Success;
         }
     }
+
+    public List<PayrollReport> getReport() {
+        List<PayrollReport> payrollReports = (List<PayrollReport>) payrollReportRepository.findAll();
+        return payrollReports;
+    }
 }
