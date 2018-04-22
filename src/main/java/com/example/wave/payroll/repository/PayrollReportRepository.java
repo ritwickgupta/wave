@@ -15,5 +15,5 @@ public interface PayrollReportRepository extends CrudRepository<PayrollReport, I
     @Query("from PayrollReport p where p.employeeId = :employeeId and p.startDate < :date and p.endDate > :date")
     PayrollReport getReport(@Param("employeeId") Integer employeeId, @Param("date") Date date);
 
-    List<PayrollReport> findAllByOrderByStartDate();
+    List<PayrollReport> findAllByOrderByEmployeeIdAscStartDateAsc();
 }

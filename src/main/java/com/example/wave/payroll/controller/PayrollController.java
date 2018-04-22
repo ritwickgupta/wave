@@ -54,6 +54,11 @@ public class PayrollController {
     public String singleFileUpload(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
         log.info("Uploading file: " + multipartFile.getOriginalFilename());
 
+        if (multipartFile.getOriginalFilename().isEmpty()) {
+            redirectAttributes.addFlashAttribute("msg", ErrorMessage.NoFileSelected);
+            return "redirect:/payroll";
+        }
+
         if (!multipartFile.getContentType().equalsIgnoreCase("text/csv")) {
             redirectAttributes.addFlashAttribute("msg", ErrorMessage.InvalidFileType);
             return "redirect:/payroll";

@@ -8,4 +8,5 @@ public interface ErrorMessage {
     String InvalidJobGroup = "The Job Group is invalid for one of the entries. It should be A or B";
     String InvalidFileType = "Only CSV files are allowed";
     String Error = "Something went wrong, please try again";
+    String NoFileSelected = "Please select a CSV file";
 }

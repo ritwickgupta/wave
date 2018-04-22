@@ -136,7 +136,7 @@ public class PayrollService {
     }
 
     public List<PayrollReport> getReport() {
-        List<PayrollReport> payrollReports = payrollReportRepository.findAllByOrderByStartDate();
+        List<PayrollReport> payrollReports = payrollReportRepository.findAllByOrderByEmployeeIdAscStartDateAsc();
         return payrollReports;
     }
 }
