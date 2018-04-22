@@ -61,14 +61,14 @@ public class PayrollService {
             String[] line;
             while ((line = reader.readNext()) != null) {
 
-                if(line.length != 4) {
+                if (line.length != 4) {
                     return ErrorMessage.CSVError;
                 }
 
-                if(Constants.Date.equalsIgnoreCase(line[0])) {
+                if (Constants.Date.equalsIgnoreCase(line[0])) {
                     continue;
                 } else if (Constants.ReportId.equalsIgnoreCase(line[0])) {
-                    if(reportNumberRepository.findByRecordNumber(Integer.parseInt(line[1])) != null) {
+                    if (reportNumberRepository.findByRecordNumber(Integer.parseInt(line[1])) != null) {
                         log.info(ErrorMessage.ReportUploaded);
                         return ErrorMessage.ReportUploaded;
                     } else {
@@ -76,7 +76,7 @@ public class PayrollService {
                     }
                 } else {
                     DateFormat dateFormat = new SimpleDateFormat(Constants.DateFormat);
-                    if(!Arrays.asList(Constants.JobGroups).contains(line[3])) {
+                    if (!Arrays.asList(Constants.JobGroups).contains(line[3])) {
                         log.info(ErrorMessage.InvalidJobGroup);
                         return ErrorMessage.InvalidJobGroup;
                     }
@@ -86,7 +86,7 @@ public class PayrollService {
                 }
             }
 
-            if(reportNumber.getReportNumber() == null) {
+            if (reportNumber.getReportNumber() == null) {
                 log.info(ErrorMessage.ReportNumberMissing);
                 return ErrorMessage.ReportNumberMissing;
             }
@@ -96,16 +96,16 @@ public class PayrollService {
 
             //Process Records
 
-            for(Record record : records) {
+            for (Record record : records) {
                 PayrollReport payrollReport = payrollReportRepository.getReport(record.getEmployeeId(), record.getJobDate());
                 Double amountPaid;
-                if(record.getJobGroup().equalsIgnoreCase("A")) {
+                if (record.getJobGroup().equalsIgnoreCase("A")) {
                     amountPaid = Constants.RateA * record.getHoursWorked();
                 } else {
                     amountPaid = Constants.RateB * record.getHoursWorked();
                 }
 
-                if(payrollReport == null) {
+                if (payrollReport == null) {
 
                     LocalDate localJobDate = record.getJobDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate localEndDate, localStartDate;
@@ -119,8 +119,8 @@ public class PayrollService {
                         localEndDate = localJobDate.withDayOfMonth(15);
                     }
 
-                    startDate =Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    endDate =Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    startDate = Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    endDate = Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
                     payrollReport = new PayrollReport(record.getEmployeeId(), startDate, endDate, amountPaid);
                     payrollReportRepository.save(payrollReport);
@@ -136,7 +136,7 @@ public class PayrollService {
     }
 
     public List<PayrollReport> getReport() {
-        List<PayrollReport> payrollReports = (List<PayrollReport>) payrollReportRepository.findAll();
+        List<PayrollReport> payrollReports = payrollReportRepository.findAllByOrderByStartDate();
         return payrollReports;
     }
 }

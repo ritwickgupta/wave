@@ -35,10 +35,10 @@ public class PayrollController {
     public String hello(Model model) {
         log.info("Get Payroll");
         DateFormat dateFormat = new SimpleDateFormat(Constants.DateFormat);
-        DecimalFormat decimalFormat= new DecimalFormat("#.00");
-        List<PayrollReport>  reports= payrollService.getReport();
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        List<PayrollReport> reports = payrollService.getReport();
         List<PayrollReportModel> list = new ArrayList<>();
-        for(PayrollReport payrollReport : reports) {
+        for (PayrollReport payrollReport : reports) {
             PayrollReportModel payrollReportModel = new PayrollReportModel();
             payrollReportModel.setEmployeeId(payrollReport.getEmployeeId().toString());
             payrollReportModel.setPayPeriod(dateFormat.format(payrollReport.getStartDate()) + " - " + dateFormat.format(payrollReport.getEndDate()));
@@ -70,7 +70,7 @@ public class PayrollController {
             return "redirect:/payroll";
         }
 
-        if(Constants.Success.equalsIgnoreCase(result)) {
+        if (Constants.Success.equalsIgnoreCase(result)) {
             redirectAttributes.addFlashAttribute("msg", Constants.SuccessMessage);
             return "redirect:/payroll";
         } else {

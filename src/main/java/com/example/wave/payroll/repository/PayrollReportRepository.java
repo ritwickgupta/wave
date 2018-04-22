@@ -7,10 +7,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface PayrollReportRepository extends CrudRepository<PayrollReport, Integer> {
 
     @Query("from PayrollReport p where p.employeeId = :employeeId and p.startDate < :date and p.endDate > :date")
     PayrollReport getReport(@Param("employeeId") Integer employeeId, @Param("date") Date date);
+
+    List<PayrollReport> findAllByOrderByStartDate();
 }

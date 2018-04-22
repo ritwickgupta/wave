@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PayrollApplication {
 
-	static Logger log = LoggerFactory.getLogger(PayrollApplication.class);
+    static Logger log = LoggerFactory.getLogger(PayrollApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(PayrollApplication.class, args);
-		log.info("Server Started");
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PayrollApplication.class, args);
+        log.info("Server Started. Open 'http://localhost:8080/payroll' on a browser to access the application");
+    }
 }
