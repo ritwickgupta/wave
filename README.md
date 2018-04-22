@@ -222,3 +222,11 @@ Evaluation of your submission will be based on the following criteria.
    they explained?
 1. Did you separate any concerns in your application? Why or why not?
 1. Does your solution use appropriate data types for the problem as described?
+
+## Deployment Instructions
+
+1. Make sure Java and Maven is set up on your machine
+1. Open terminal and browse to project directory
+1. Run the following command on terminal: mvn spring-boot:run
+1. Open your web browser and navigate to http://localhost:8080/payroll
+1. I am proud of how modular the application code is which enables quick modifications and addition of new features. The database design keeps all the record persistence and also provides speedy data access at the same time. This implementation shows good use of Spring libraries and configuration annotations.
