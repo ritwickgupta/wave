@@ -1,3 +1,12 @@
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+
 # Wave Software Development Challenge
 
 Applicants for the [Software
